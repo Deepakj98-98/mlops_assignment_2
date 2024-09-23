@@ -1,17 +1,30 @@
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from sklearn.impute import SimpleImputer
 from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import accuracy_score, classification_report
-import numpy as np
-#import autosklearn.classification
-from sklearn.model_selection import train_test_split
-#from sklearn.metrics import accuracy_score, classification_reportp
+import joblib
 
-# Load Dataset (Example: Titanic Dataset from Kaggle)
-data = pd.read_csv("C:\\Users\\Deepak J Bhat\\Downloads\\train.csv")
+# Example preprocessor
+numerical_features = ['Age', 'Fare']
+categorical_features = ['Sex', 'Embarked']
+
+# Numerical Preprocessing
+numerical_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='mean')),
+    ('scaler', StandardScaler())])
+
+# Categorical Preprocessing
+categorical_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='most_frequent')),
+    ('onehot', OneHotEncoder(handle_unknown='ignore'))])
+
+# Combine both transformers
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numerical_transformer, numerical_features),
+        ('cat', categorical_transformer, categorical_features)
+    ])
+
+# Fit the preprocessor and save it for later use in Flask
+preprocessor.fit(X_train)
+joblib.dump(preprocessor, 'preprocessor.pkl')
