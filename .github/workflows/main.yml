@@ -46,4 +46,5 @@ jobs:
         ls -lrt
         rm -rf scipy
         ls -lrt
+        cd ../../
         ./deploy.sh devl
