@@ -49,7 +49,7 @@ Resources:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups:
-            - "sg-05f4228a3bdc91223"
+            - "sg-00ffe475bd3027601"
           Subnets:
             - "subnet-00a5fb15bab55d3e5"
             - "subnet-00c44ab9d1ad40aab"
