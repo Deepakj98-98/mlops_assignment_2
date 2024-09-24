@@ -1,5 +1,15 @@
-
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+.idea
+__pycache__
+virtual
+test
+**/.pytest_cache
+.coverage
+htmlcov
+junit
+.scannerwork
+coverage.xml
+.vscode

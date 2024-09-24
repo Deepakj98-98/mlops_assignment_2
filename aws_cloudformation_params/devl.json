@@ -1,0 +1,1 @@
+["FunctionName=mlops-lambda-devl", "LambdaRoleARN=arn:aws:iam::025066267638:role/service-role/mlops-role-bojow8u2", "Environment=devl", "SecurityGroupId=", "VpcSubnetIds=", "ComponentName=", "LayerName=mlops-lambda-lib"]
