@@ -1,0 +1,1 @@
+["FunctionName=mlops-lambda-prod", "LambdaRoleARN=", "Environment=prod", "SecurityGroupId=", "VpcSubnetIds=", "ComponentName=", "LayerName=mlops-lambda-lib"]
