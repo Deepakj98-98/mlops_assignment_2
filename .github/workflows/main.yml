@@ -52,5 +52,6 @@ jobs:
         ECR_REPOSITORY: mlops-assignment
         IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}, latest
       run: |
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker build -t mlops-assignment .
+          docker tag mlops-assignment:latest 025066267638.dkr.ecr.us-east-1.amazonaws.com/mlops-assignment:latest
+          docker push 025066267638.dkr.ecr.us-east-1.amazonaws.com/mlops-assignment:latest
