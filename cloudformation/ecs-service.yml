@@ -31,7 +31,7 @@ Resources:
           LinuxParameters:
             InitProcessEnabled: true
           PortMappings:
-            - ContainerPort: 8000
+            - ContainerPort: 5000
 
   Service:
     Type: AWS::ECS::Service
