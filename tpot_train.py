@@ -16,7 +16,7 @@ import joblib
 #from sklearn.metrics import accuracy_score, classification_reportp
 
 # Load Dataset (Example: Titanic Dataset from Kaggle)
-data = pd.read_csv("C:\\Users\\Deepak J Bhat\\Downloads\\train.csv")
+data = pd.read_csv("./train.csv")
 
 #Data Preprocessing
 # Handle missing values
@@ -58,12 +58,8 @@ categorical_feature_names = preprocessor.named_transformers_['cat']['onehot'].ge
 
 # Combine with numerical feature names
 final_feature_names = numerical_cols + list(categorical_feature_names)
-# Print the final feature names
-print(final_feature_names)
 joblib.dump(preprocessor, 'preprocessor.pkl')
 X_test = preprocessor.transform(X_test)
-print(f'Shape of X_test: {X_test.shape}')
-print(f'Shape of y_test: {X_train.shape}')
 
 # Ensure that X_test is a DataFrame with proper feature names
 if isinstance(X_test, np.ndarray):
@@ -74,8 +70,6 @@ import matplotlib.pyplot as plt
 from tpot import TPOTClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
-
-# Assuming you already have X_train, X_test, y_train, y_test
 
 # Initialize TPOT classifier
 tpot = TPOTClassifier(
