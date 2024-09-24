@@ -42,4 +42,5 @@ jobs:
         aws s3 ls
         chmod 777 *.sh
         ./build-layer.sh
+        ls -lrt
         ./deploy.sh devl
