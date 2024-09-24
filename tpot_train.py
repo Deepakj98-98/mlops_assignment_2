@@ -58,7 +58,7 @@ categorical_feature_names = preprocessor.named_transformers_['cat']['onehot'].ge
 final_feature_names = numerical_cols + list(categorical_feature_names)
 # Print the final feature names
 print(final_feature_names)
-joblib.dump(preprocessor, 'preprocessor.pkl')
+joblib.dump(preprocessor, './python_function/function/preprocessor.pkl')
 X_test = preprocessor.transform(X_test)
 print(f'Shape of X_test: {X_test.shape}')
 print(f'Shape of y_test: {X_train.shape}')
@@ -90,7 +90,7 @@ print(classification_report(y_test, y_pred))
 # To display the best pipeline found by TPOT
 print("\nTPOT Best Pipeline:")
 print(tpot.fitted_pipeline_)
-joblib.dump(tpot.fitted_pipeline_, 'tpot_best_model.pkl')
+joblib.dump(tpot.fitted_pipeline_, './python_function/function/tpot_best_model.pkl')
 # Display all non-dominated pipelines tried by TPOT
 print("\nAll Non-Dominated Pipelines Tried by TPOT:")
 for pipeline in tpot.pareto_front_fitted_pipelines_.keys():
