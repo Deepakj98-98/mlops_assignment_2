@@ -55,3 +55,10 @@ jobs:
           docker build -t mlops-assignment .
           docker tag mlops-assignment:latest 025066267638.dkr.ecr.us-east-1.amazonaws.com/mlops-assignment:latest
           docker push 025066267638.dkr.ecr.us-east-1.amazonaws.com/mlops-assignment:latest
+
+    - name: Deploy to AWS CloudFormation
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      with:
+        name: mlops-fargate
+        template: ./cloudformation/ecs-service.yml
+        parameter-overrides: "MyParam1=myValue,MyParam2=${{ secrets.MY_SECRET_VALUE }}"
