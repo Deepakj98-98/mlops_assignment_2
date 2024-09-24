@@ -1,0 +1,92 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This lambda is for mlops-lambda
+Transform: AWS::Serverless-2016-10-31
+Parameters:
+  Environment:
+    Type: String
+    Default: devl
+    Description: Environment
+  SecurityGroupId:
+    Type: String
+    Default: sg-XXXX
+    Description: Security Group for Lambda
+  VpcSubnetIds:
+    Type: String
+    Default: subnet-XXXX
+    Description: Cloud VPC Subnets for Lambda
+  LambdaRoleARN:
+    Type: String
+    Default: 'aws::::::'
+    Description: Role for lambda execution
+  FunctionName:
+    Type: String
+    Description: Name Of the Lambda
+  ComponentName:
+    Type: String
+    Default: default-tag
+    Description: Component for tagging
+  LayerName:
+    Type: String
+    Default: default-name
+    Description: Name Of Layer
+Resources:
+  LambdaFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName:
+        Ref: FunctionName
+      Handler: function.lambda_function.lambda_handler
+      Runtime: python3.12
+      CodeUri: python_function/.
+      Description: Call the AWS Lambda API
+      Timeout: 120
+      Environment:
+        Variables:
+          environment:
+            Ref: Environment
+      Role:
+        Ref: LambdaRoleARN
+      Tracing: Active
+      Layers:
+      - Ref: libs
+      Tags:
+        component:
+          Ref: ComponentName
+  libs:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName:
+        Ref: LayerName
+      Description: Dependencies for the blank-python sample app.
+      ContentUri: package/.
+      CompatibleRuntimes:
+      - python3.12
+  LambdaFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName:
+        Fn::Join:
+        - ''
+        - - /aws/lambda/
+          - Ref: FunctionName
+      RetentionInDays: 30
+      Tags:
+      - Key: component
+        Value:
+          Ref: ComponentName
+    DependsOn: LambdaFunction
+  MyFunctionUrl:
+    Type: AWS::Lambda::Url
+    Properties:
+      TargetFunctionArn: !Ref LambdaFunction
+      AuthType: NONE
+      Cors:
+        AllowOrigins:
+         - '*'
+  LambdaResourcePolicy:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunctionUrl
+      FunctionName: !Ref LambdaFunction
+      FunctionUrlAuthType: 'NONE'
+      Principal: '*'
