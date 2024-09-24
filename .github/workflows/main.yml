@@ -42,5 +42,8 @@ jobs:
         aws s3 ls
         chmod 777 *.sh
         ./build-layer.sh
+        cd ./package/python
+        ls -lrt
+        rm -rf scipy
         ls -lrt
         ./deploy.sh devl
