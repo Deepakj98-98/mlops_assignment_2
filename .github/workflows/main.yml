@@ -26,7 +26,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirement.txt
+        pip install -r requirements.txt
+        echo "======================= START TRAINING =========================="
+        python tpot_train.py
 
     - name: Get Credentials   
       uses: aws-actions/configure-aws-credentials@v4
@@ -34,7 +36,7 @@ jobs:
         aws-access-key-id: AKIAQLVQQ4P3GLYVSUOQ
         aws-secret-access-key: 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
         aws-region: us-east-1
-    - name: Get Credentials   
+    - name: Deploy Lambda
       run: |
         aws s3 ls
         chmod 777 *.sh
