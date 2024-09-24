@@ -20,24 +20,32 @@ data = pd.read_csv("C:\\Users\\Deepak J Bhat\\Downloads\\train.csv")
 
 #Data Preprocessing
 # Handle missing values
-numerical_features = ['Age', 'Fare']
-categorical_features = ['Sex', 'Embarked']  
+# Numerical and categorical columns
+numerical_cols = ['Age', 'Fare', 'SibSp', 'Parch']
+categorical_cols = ['Pclass', 'Sex', 'Embarked'] 
 
-# Numerical Preprocessing Pipeline
+# Preprocessing for numerical data
 numerical_transformer = Pipeline(steps=[
-    ('imputer', SimpleImputer(strategy='mean')),
-    ('scaler', StandardScaler())])
+    ('imputer', SimpleImputer(strategy='median')),
+    ('scaler', StandardScaler())
+])
 
-# Categorical Preprocessing Pipeline
+# Preprocessing for categorical data
 categorical_transformer = Pipeline(steps=[
     ('imputer', SimpleImputer(strategy='most_frequent')),
-    ('onehot', OneHotEncoder(handle_unknown='ignore'))])
+    ('onehot', OneHotEncoder(drop='first'))
+])
 
-# Combine Both Preprocessing Pipelines
+# Combine preprocessing steps
 preprocessor = ColumnTransformer(
     transformers=[
-        ('num', numerical_transformer, numerical_features),
-        ('cat', categorical_transformer, categorical_features)])
+        ('num', numerical_transformer, numerical_cols),
+        ('cat', categorical_transformer, categorical_cols)
+    ]
+)
+
+
+
 
 
 #This script performs:
@@ -54,6 +62,13 @@ print("training completed successfully")
 print(X_train.shape)
 # Fit and transform the training data
 X_train = preprocessor.fit_transform(X_train)
+# Extract the feature names from the ColumnTransformer
+categorical_feature_names = preprocessor.named_transformers_['cat']['onehot'].get_feature_names_out(['Pclass', 'Sex', 'Embarked'])
+
+# Combine with numerical feature names
+final_feature_names = numerical_cols + list(categorical_feature_names)
+# Print the final feature names
+print(final_feature_names)
 joblib.dump(preprocessor, 'preprocessor.pkl')
 X_test = preprocessor.transform(X_test)
 print(f'Shape of X_test: {X_test.shape}')
@@ -61,7 +76,7 @@ print(f'Shape of y_test: {X_train.shape}')
 
 # Ensure that X_test is a DataFrame with proper feature names
 if isinstance(X_test, np.ndarray):
-    X_test = pd.DataFrame(X_test, columns=[f'feature_{i}' for i in range(X_test.shape[1])])
+    X_test = pd.DataFrame(X_test, columns=final_feature_names)
 
 import shap
 import matplotlib.pyplot as plt
@@ -81,7 +96,7 @@ tpot = TPOTClassifier(
 
 # Train TPOT
 tpot.fit(X_train, y_train)
-tpot.export('tpot_best_model.py')
+#tpot.export('tpot_best_model.py')
 # Predict on the test set
 y_pred = tpot.predict(X_test)
 
@@ -103,17 +118,17 @@ for pipeline in tpot.pareto_front_fitted_pipelines_.keys():
 # ==================================
 # LIME EXPLANATIONS
 # ==================================
-'''
+
 import lime
-import lime.lime_tabular
+from lime import lime_tabular
 import matplotlib.pyplot as plt
 print(X_train.shape[1])
 # Initialize the LIME explainer
-class_names=['Not Survived','Survived']
-explainer = lime.lime_tabular.LimeTabularExplainer(
+class_names=['Survived']
+explainer = lime_tabular.LimeTabularExplainer(
     X_train,  # Pass X_train as NumPy array
-    feature_names=[f'feature_{i}' for i in range(X_train.shape[1])],  # Give custom feature names
-    class_names=['Not Survived','Survived'],  # Modify based on your class names
+    feature_names=final_feature_names,  # Give custom feature names
+    class_names=['Survived'],  # Modify based on your class names
     mode='classification'
 )
 
@@ -122,8 +137,7 @@ i = 0
 instance =  X_test.iloc[i].values
 # Generate explanations for all classes
 for i in range(len(class_names)):
-    exp = explainer.explain_instance(instance, tpot.predict_proba, num_features=10, top_labels=len(class_names))
+    exp = explainer.explain_instance(instance, tpot.predict_proba, num_features=7, top_labels=len(class_names))
     fig = exp.as_pyplot_figure(label=i)
     plt.title(f'Local explanation for class {class_names[i]}')
     plt.show()
-'''
