@@ -10,8 +10,13 @@ logger.setLevel(logging.INFO)
 
 env = os.environ["environment"]
 
-model = joblib.load('tpot_best_model.pkl')
-preprocessor = joblib.load('preprocessor.pkl')
+thisfolder = os.path.dirname(os.path.abspath(__file__))
+tpot_best_model_path = os.path.join(thisfolder, 'tpot_best_model.pkl')
+preprocessor_path = os.path.join(thisfolder, 'preprocessor.pkl')
+
+model = joblib.load(tpot_best_model_path)
+preprocessor = joblib.load(preprocessor_path)
+
 
 
 def lambda_handler(event, context):
