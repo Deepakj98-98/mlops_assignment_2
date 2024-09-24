@@ -1,0 +1,12 @@
+pytest
+pytest-cov
+pytest-html
+pytest-mock
+moto
+patch
+Mock
+pyyaml
+boto3
+requests
+psycopg2-binary
+aws-xray-sdk==2.4.3
