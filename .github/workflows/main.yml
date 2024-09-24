@@ -37,14 +37,20 @@ jobs:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_ID }}
         aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY }}
         aws-region: us-east-1
-    - name: Deploy Lambda
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Get commit hash
+      id: get-commit-hash
+      run: echo "::set-output name=commit-hash::$(git rev-parse --short HEAD)"
+
+    - name: Build, tag, and push the image to Amazon ECR
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: mlops-assignment
+        IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}, latest
       run: |
-        aws s3 ls
-        chmod 777 *.sh
-        ./build-layer.sh
-        cd ./package/python
-        ls -lrt
-        rm -rf scipy
-        ls -lrt
-        cd ../../
-        ./deploy.sh devl
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
