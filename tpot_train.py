@@ -44,22 +44,13 @@ preprocessor = ColumnTransformer(
     ]
 )
 
-
-
-
-
-#This script performs:
 #Missing value imputation using SimpleImputer
 #Scaling numeric features using StandardScaler
 #Encoding categorical variables using OneHotEncoder
-# Apply Preprocessing
 X = data.drop('Survived', axis=1)  # Replace 'Target' with your actual target column
 y = data['Survived']
-print(X.shape)
 # Split the data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-print("training completed successfully")
-print(X_train.shape)
 # Fit and transform the training data
 X_train = preprocessor.fit_transform(X_train)
 # Extract the feature names from the ColumnTransformer
