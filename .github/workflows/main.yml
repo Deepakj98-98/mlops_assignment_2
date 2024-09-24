@@ -61,4 +61,3 @@ jobs:
       with:
         name: mlops-fargate
         template: ./cloudformation/ecs-service.yml
-        parameter-overrides: "MyParam1=myValue,MyParam2=${{ secrets.MY_SECRET_VALUE }}"
