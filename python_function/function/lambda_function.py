@@ -1,8 +1,9 @@
 import json
 import logging
 import os
+import pickle
 
-import joblib
+# import joblib
 import pandas as pd
 
 logger = logging.getLogger()
@@ -11,12 +12,18 @@ logger.setLevel(logging.INFO)
 env = os.environ["environment"]
 
 thisfolder = os.path.dirname(os.path.abspath(__file__))
-tpot_best_model_path = os.path.join(thisfolder, 'tpot_best_model.pkl')
-preprocessor_path = os.path.join(thisfolder, 'preprocessor.pkl')
+tpot_best_model_path = os.path.join(thisfolder, 'Best_model.pkl')
+preprocessor_path = os.path.join(thisfolder, 'Best_model_preprocessing.pkl')
 
-model = joblib.load(tpot_best_model_path)
-preprocessor = joblib.load(preprocessor_path)
+with open(preprocessor_path, 'rb') as file:
+    loaded_preprocessor = pickle.load(file)
 
+with open(tpot_best_model_path, 'rb') as file:
+    loaded_model = pickle.load(file)
+
+
+# model = joblib.load(tpot_best_model_path)
+# preprocessor = joblib.load(preprocessor_path)
 
 
 def lambda_handler(event, context):
@@ -39,10 +46,10 @@ def lambda_handler(event, context):
         })
 
         # Step 3: Preprocess the user input using the pre-trained pipeline
-        processed_input = preprocessor.transform(input_df)
+        processed_input = loaded_preprocessor.transform(input_df)
 
         # Step 4: Pass the preprocessed data to the model for predictions
-        prediction = model.predict(processed_input)
+        prediction = loaded_model.predict(processed_input)
 
         return {
             'statusCode': 200,
@@ -56,5 +63,3 @@ def lambda_handler(event, context):
         logger.exception(e)
     finally:
         logger.info('End of mlops-lambda lambda')
-
-
