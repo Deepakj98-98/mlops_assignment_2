@@ -1,4 +1,4 @@
-# Load Dataset (Example: Titanic Dataset from Kaggle)
+# Load Dataset
 import pandas as pd
 from ydata_profiling import ProfileReport
 data = pd.read_csv("C:\\Users\\Deepak J Bhat\\Downloads\\train.csv")
