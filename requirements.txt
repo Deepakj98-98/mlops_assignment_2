@@ -5,7 +5,6 @@ tpot
 flask
 lime
 matplotlib
-setuptools
 lime
 matplotlib
 auto-sklearn==0.15.0
