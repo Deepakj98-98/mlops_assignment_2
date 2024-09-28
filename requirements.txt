@@ -8,4 +8,4 @@ matplotlib
 setuptools
 lime
 matplotlib
-auto-sklearn
+auto-sklearn==0.15.0
