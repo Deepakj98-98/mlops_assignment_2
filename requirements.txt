@@ -1,5 +1,6 @@
 pandas
 numpy
+setuptools
 scikit-learn
 tpot
 flask
