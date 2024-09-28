@@ -3,8 +3,10 @@ import joblib
 import pandas as pd
 
 # Load the trained model
-model = joblib.load('tpot_best_model.pkl')
-preprocessor = joblib.load('preprocessor.pkl')
+tpot_model = joblib.load('tpot_best_model.pkl')
+tpot_preprocessor = joblib.load('preprocessor.pkl')
+autosklearn_model = joblib.load('python_function/function/Best_model.pkl')
+autosklearn_preprocessor = joblib.load('python_function/function/Best_model_preprocessing.pkl')
 app = Flask(__name__)
 
 # Define a route to make predictions
@@ -23,14 +25,24 @@ def predict():
         'Sex': [user_input['Sex']],
         'Embarked': [user_input['Embarked']]
     })
+
+    #TPOT prediction pipeline
     
     # Step 3: Preprocess the user input using the pre-trained pipeline
-    processed_input = preprocessor.transform(input_df)
+    tpot_processed_input = tpot_preprocessor.transform(input_df)
     
     # Step 4: Pass the preprocessed data to the model for predictions
-    prediction = model.predict(processed_input)
+    tpot_prediction = tpot_model.predict(tpot_processed_input)
 
-    return jsonify({'prediction': int(prediction[0])})
+
+    # Auto-Sklearn prediction pipeline
+
+    ASK_processed_input = autosklearn_preprocessor.transform(input_df[['pclass','sex','age','sibsp','parch','fare','embarked']])
+    
+    ASK_prediction = autosklearn_model.predict(ASK_processed_input)
+
+    return jsonify({'TPOT_prediction': int(tpot_prediction[0]),
+                    'Auto-Sklearn prediction':int(ASK_prediction[0])})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
