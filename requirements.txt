@@ -8,3 +8,4 @@ matplotlib
 setuptools
 lime
 matplotlib
+auto-sklearn
