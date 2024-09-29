@@ -54,8 +54,7 @@ jobs:
         IMAGE_TAG: ${{ steps.get-commit-hash.outputs.commit-hash }}
       run: |
           docker build -t mlops-assignment .
-          docker tag mlops-assignment:latest 025066267638.dkr.ecr.us-east-1.amazonaws.com/mlops-assignment:$IMAGE_TAG
-          docker tag mlops-assignment:latest 025066267638.dkr.ecr.us-east-1.amazonaws.com/mlops-assignment:latest
+          docker tag mlops-assignment:latest 025066267638.dkr.ecr.us-east-1.amazonaws.com/mlops-assignment:$IMAGE_TAG 025066267638.dkr.ecr.us-east-1.amazonaws.com/mlops-assignment:latest
           docker push 025066267638.dkr.ecr.us-east-1.amazonaws.com/mlops-assignment:$IMAGE_TAG
 
 #    - name: Deploy to AWS CloudFormation
